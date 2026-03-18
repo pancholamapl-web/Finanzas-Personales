@@ -7,19 +7,10 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
   <style>
     :root {
-      --bg: #0a0a0f;
-      --surface: #111118;
-      --surface2: #1a1a24;
-      --border: #22222e;
-      --accent: #00e5a0;
-      --accent2: #7c5cfc;
-      --red: #ff4e6a;
-      --green: #00e5a0;
-      --text: #e8e8f0;
-      --muted: #5a5a78;
-      --muted2: #3a3a52;
-      --font-display: 'Syne', sans-serif;
-      --font-mono: 'DM Mono', monospace;
+      --bg: #0a0a0f; --surface: #111118; --surface2: #1a1a24; --border: #22222e;
+      --accent: #00e5a0; --accent2: #7c5cfc; --red: #ff4e6a; --green: #00e5a0;
+      --text: #e8e8f0; --muted: #5a5a78; --muted2: #3a3a52;
+      --font-display: 'Syne', sans-serif; --font-mono: 'DM Mono', monospace;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { background: var(--bg); color: var(--text); font-family: var(--font-mono); min-height: 100vh; overflow-x: hidden; }
@@ -44,9 +35,11 @@
     .summary-sub { font-size: 0.7rem; color: var(--muted); margin-top: 0.3rem; }
     .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
     .section-title { font-family: var(--font-display); font-size: 1rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); }
-    .btn-add { display: flex; align-items: center; gap: 0.5rem; background: var(--accent); color: #000; border: none; border-radius: 8px; padding: 0.55rem 1.1rem; font-family: var(--font-display); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.05em; cursor: pointer; transition: opacity 0.2s, transform 0.1s; }
+    .btn-add { display: flex; align-items: center; gap: 0.5rem; background: var(--accent); color: #000; border: none; border-radius: 8px; padding: 0.55rem 1.1rem; font-family: var(--font-display); font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: opacity 0.2s, transform 0.1s; }
     .btn-add:hover { opacity: 0.85; }
     .btn-add:active { transform: scale(0.97); }
+
+    /* Modal */
     .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(6px); z-index: 100; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
     .modal-overlay.open { opacity: 1; pointer-events: all; }
     .modal { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; width: 100%; max-width: 480px; transform: translateY(20px); transition: transform 0.3s; }
@@ -67,21 +60,43 @@
     .search-dropdown.open { display: block; }
     .dropdown-item { padding: 0.6rem 0.9rem; cursor: pointer; font-size: 0.85rem; display: flex; justify-content: space-between; align-items: center; transition: background 0.15s; }
     .dropdown-item:hover { background: var(--border); }
-    .dropdown-item .ticker { color: var(--accent); font-weight: 500; }
-    .dropdown-item .name { color: var(--muted); font-size: 0.75rem; }
+    .dropdown-item .di-ticker { color: var(--accent); font-weight: 500; }
+    .dropdown-item .di-name { color: var(--muted); font-size: 0.75rem; }
     .modal-actions { display: flex; gap: 0.8rem; margin-top: 1.8rem; }
-    .btn-cancel { flex: 1; background: transparent; border: 1px solid var(--border); color: var(--muted); border-radius: 8px; padding: 0.7rem; font-family: var(--font-mono); font-size: 0.85rem; cursor: pointer; transition: border-color 0.2s; }
+    .btn-cancel { flex: 1; background: transparent; border: 1px solid var(--border); color: var(--muted); border-radius: 8px; padding: 0.7rem; font-family: var(--font-mono); font-size: 0.85rem; cursor: pointer; }
     .btn-cancel:hover { border-color: var(--muted); color: var(--text); }
-    .btn-submit { flex: 2; background: var(--accent); color: #000; border: none; border-radius: 8px; padding: 0.7rem; font-family: var(--font-display); font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: opacity 0.2s; }
+    .btn-submit { flex: 2; background: var(--accent); color: #000; border: none; border-radius: 8px; padding: 0.7rem; font-family: var(--font-display); font-size: 0.85rem; font-weight: 700; cursor: pointer; }
     .btn-submit:hover { opacity: 0.85; }
+
+    /* Holdings */
     .holdings-wrap { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
     .holdings-table { width: 100%; border-collapse: collapse; }
     .holdings-table th { font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); padding: 1rem 1.2rem; text-align: left; background: var(--surface); border-bottom: 1px solid var(--border); font-weight: 400; }
     .holdings-table th.right { text-align: right; }
-    .holdings-table td { padding: 1rem 1.2rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
-    .holdings-table tr:last-child td { border-bottom: none; }
-    .holdings-table tr { background: var(--surface); transition: background 0.15s; }
-    .holdings-table tr:hover { background: var(--surface2); }
+
+    /* Fila principal */
+    .row-main td { padding: 1rem 1.2rem; border-bottom: 1px solid var(--border); vertical-align: middle; background: var(--surface); transition: background 0.15s; }
+    .row-main:hover td { background: var(--surface2); }
+    .row-main.expanded td { background: var(--surface2); border-bottom: none; }
+    .row-main { cursor: pointer; }
+
+    /* Fila de detalle */
+    .row-detail td { padding: 0; border-bottom: 1px solid var(--border); background: var(--bg); }
+    .detail-inner { overflow: hidden; max-height: 0; transition: max-height 0.35s ease; }
+    .detail-inner.open { max-height: 600px; }
+    .detail-content { padding: 0.8rem 1.2rem 1.2rem 1.2rem; }
+    .detail-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.8rem; }
+    .detail-title { font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+    .btn-add-buy { display: flex; align-items: center; gap: 0.4rem; background: transparent; border: 1px solid var(--accent); color: var(--accent); border-radius: 6px; padding: 0.3rem 0.7rem; font-family: var(--font-display); font-size: 0.72rem; font-weight: 700; cursor: pointer; transition: all 0.15s; }
+    .btn-add-buy:hover { background: var(--accent); color: #000; }
+    .buys-table { width: 100%; border-collapse: collapse; }
+    .buys-table th { font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted2); padding: 0.4rem 0.8rem; text-align: left; font-weight: 400; }
+    .buys-table th.right { text-align: right; }
+    .buys-table td { padding: 0.5rem 0.8rem; font-size: 0.82rem; border-top: 1px solid var(--border); }
+    .buys-table td.right { text-align: right; }
+    .btn-del-buy { background: transparent; border: none; color: var(--muted2); font-size: 0.75rem; cursor: pointer; padding: 0.2rem 0.4rem; border-radius: 4px; transition: color 0.15s; }
+    .btn-del-buy:hover { color: var(--red); }
+
     .ticker-cell { display: flex; align-items: center; gap: 0.8rem; }
     .ticker-icon { width: 36px; height: 36px; border-radius: 8px; background: var(--surface2); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 0.65rem; font-weight: 800; color: var(--accent); flex-shrink: 0; }
     .ticker-icon.crypto { color: #f7931a; border-color: rgba(247,147,26,0.3); background: rgba(247,147,26,0.08); }
@@ -93,6 +108,9 @@
     .asset-badge { display: inline-block; font-size: 0.55rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.15rem 0.4rem; border-radius: 4px; margin-left: 0.4rem; vertical-align: middle; }
     .asset-badge.stock { background: rgba(0,229,160,0.1); color: var(--green); }
     .asset-badge.crypto { background: rgba(247,147,26,0.1); color: #f7931a; }
+    .chevron { font-size: 0.7rem; color: var(--muted); transition: transform 0.25s; display: inline-block; }
+    .row-main.expanded .chevron { transform: rotate(90deg); }
+    .buys-count { font-size: 0.68rem; color: var(--muted); margin-left: 0.3rem; }
     .td-right { text-align: right; }
     .td-mono { font-family: var(--font-mono); }
     .pnl-positive { color: var(--green); }
@@ -128,7 +146,7 @@
   </header>
 
   <div class="api-notice" id="api-notice">
-    <strong>⚙ Modo demo activo:</strong> Los precios son simulados. Reemplaza <code style="color:var(--accent)">TU_API_KEY_AQUI</code> con tu clave de <a href="https://finnhub.io" target="_blank" style="color:var(--accent2)">finnhub.io</a> (gratis).
+    <strong>⚙ Modo demo activo:</strong> Reemplaza <code style="color:var(--accent)">TU_API_KEY_AQUI</code> con tu clave de <a href="https://finnhub.io" target="_blank" style="color:var(--accent2)">finnhub.io</a> (gratis).
   </div>
 
   <div class="summary-grid">
@@ -157,10 +175,7 @@
   <div class="section-header">
     <span class="section-title">Mis Posiciones</span>
     <div style="display:flex;gap:1rem;align-items:center">
-      <div class="refresh-badge">
-        <div class="refresh-dot"></div>
-        <span id="refresh-label">Actualizando cada 60s</span>
-      </div>
+      <div class="refresh-badge"><div class="refresh-dot"></div><span id="refresh-label">Actualizando cada 60s</span></div>
       <button class="btn-add" onclick="openModal()">+ Nueva Posición</button>
     </div>
   </div>
@@ -174,16 +189,16 @@
   </div>
 </div>
 
-<!-- Modal -->
+<!-- Modal nueva posición / nueva compra -->
 <div class="modal-overlay" id="modal">
   <div class="modal">
-    <div class="modal-title">Nueva Posición</div>
-    <div class="type-toggle">
+    <div class="modal-title" id="modal-title">Nueva Posición</div>
+    <div class="type-toggle" id="type-toggle">
       <button class="type-btn active" id="btn-stock" onclick="setType('stock')">📈 Acción</button>
       <button class="type-btn" id="btn-crypto" onclick="setType('crypto')">₿ Cripto</button>
     </div>
     <div class="form-grid">
-      <div class="form-group full">
+      <div class="form-group full" id="search-group">
         <label class="form-label">Símbolo / Nombre</label>
         <div class="search-wrapper">
           <input type="text" id="search-input" class="form-input" placeholder="Ej: AAPL, Bitcoin..." autocomplete="off" oninput="handleSearch(this.value)"/>
@@ -191,6 +206,11 @@
         </div>
         <input type="hidden" id="selected-ticker"/>
         <input type="hidden" id="selected-type" value="stock"/>
+      </div>
+      <!-- Campo solo lectura cuando se agrega compra a posición existente -->
+      <div class="form-group full" id="existing-ticker-group" style="display:none">
+        <label class="form-label">Activo</label>
+        <div class="form-input" style="opacity:0.6;cursor:default" id="existing-ticker-display"></div>
       </div>
       <div class="form-group">
         <label class="form-label">Cantidad</label>
@@ -207,7 +227,7 @@
     </div>
     <div class="modal-actions">
       <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
-      <button class="btn-submit" onclick="addPosition()">Agregar Posición</button>
+      <button class="btn-submit" id="btn-submit" onclick="submitModal()">Agregar</button>
     </div>
   </div>
 </div>
@@ -258,20 +278,23 @@ const CRYPTOS = [
   {ticker:'WIF',name:'dogwifhat',finnhubSymbol:'BINANCE:WIFUSDT'},
 ];
 
-let positions = JSON.parse(localStorage.getItem('portfolio_positions_v2') || '[]');
+// Estado
+// positions = [ { ticker, type, name, finnhubSymbol, buys: [{id, qty, buyPrice, buyDate}] } ]
+let positions = JSON.parse(localStorage.getItem('portfolio_v3') || '[]');
 let currentPrices = {};
 const demoBasePrices = {};
 let currentType = 'stock';
+let modalMode = 'new'; // 'new' | 'add-buy'
+let modalTargetTicker = null;
+let expandedRows = new Set();
 
 // Reloj
 function updateClock() {
-  const time = new Date().toLocaleTimeString('es-CL', {timeZone:'America/New_York',hour12:false});
-  document.getElementById('live-clock').textContent = time + ' ET';
+  document.getElementById('live-clock').textContent =
+    new Date().toLocaleTimeString('es-CL', {timeZone:'America/New_York',hour12:false}) + ' ET';
 }
-setInterval(updateClock, 1000);
-updateClock();
-
-if (FINNHUB_API_KEY !== 'TU_API_KEY_AQUI') document.getElementById('api-notice').style.display = 'none';
+setInterval(updateClock, 1000); updateClock();
+if (FINNHUB_API_KEY !== 'd6sqjs9r01qoqoir3tu0d6sqjs9r01qoqoir3tug') document.getElementById('api-notice').style.display = 'none';
 
 // Toggle tipo
 function setType(type) {
@@ -289,39 +312,73 @@ function setType(type) {
 function handleSearch(query) {
   const dd = document.getElementById('search-dropdown');
   document.getElementById('selected-ticker').value = '';
-  if (!query || query.length < 1) { dd.classList.remove('open'); return; }
+  if (!query) { dd.classList.remove('open'); return; }
   const q = query.toUpperCase();
   const list = currentType === 'stock' ? STOCKS : CRYPTOS;
   const results = list.filter(s => s.ticker.startsWith(q) || s.name.toUpperCase().includes(q)).slice(0, 8);
   if (!results.length) { dd.classList.remove('open'); return; }
   dd.innerHTML = results.map(s => `
     <div class="dropdown-item" onclick="selectAsset('${s.ticker}','${s.name.replace(/'/g,"\\'")}')">
-      <span class="ticker">${s.ticker}</span>
-      <span class="name">${s.name}</span>
+      <span class="di-ticker">${s.ticker}</span><span class="di-name">${s.name}</span>
     </div>`).join('');
   dd.classList.add('open');
 }
-
 function selectAsset(ticker, name) {
   document.getElementById('search-input').value = `${ticker} — ${name}`;
   document.getElementById('selected-ticker').value = ticker;
   document.getElementById('search-dropdown').classList.remove('open');
 }
-
 document.addEventListener('click', e => {
   if (!e.target.closest('.search-wrapper')) document.getElementById('search-dropdown').classList.remove('open');
 });
 
 // Modal
-function openModal() { document.getElementById('modal').classList.add('open'); document.getElementById('date-input').value = new Date().toISOString().split('T')[0]; }
-function closeModal() { document.getElementById('modal').classList.remove('open'); resetForm(); }
+function openModal() {
+  modalMode = 'new';
+  modalTargetTicker = null;
+  document.getElementById('modal-title').textContent = 'Nueva Posición';
+  document.getElementById('type-toggle').style.display = 'flex';
+  document.getElementById('search-group').style.display = 'flex';
+  document.getElementById('existing-ticker-group').style.display = 'none';
+  document.getElementById('btn-submit').textContent = 'Agregar Posición';
+  document.getElementById('date-input').value = new Date().toISOString().split('T')[0];
+  document.getElementById('modal').classList.add('open');
+}
+
+function openAddBuyModal(ticker, e) {
+  e.stopPropagation();
+  const pos = positions.find(p => p.ticker === ticker);
+  if (!pos) return;
+  modalMode = 'add-buy';
+  modalTargetTicker = ticker;
+  document.getElementById('modal-title').textContent = `Nueva compra · ${ticker}`;
+  document.getElementById('type-toggle').style.display = 'none';
+  document.getElementById('search-group').style.display = 'none';
+  document.getElementById('existing-ticker-group').style.display = 'flex';
+  document.getElementById('existing-ticker-display').textContent = `${pos.ticker} — ${pos.name}`;
+  document.getElementById('btn-submit').textContent = 'Agregar Compra';
+  document.getElementById('qty-input').value = '';
+  document.getElementById('price-input').value = '';
+  document.getElementById('date-input').value = new Date().toISOString().split('T')[0];
+  document.getElementById('modal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+  resetForm();
+}
 function resetForm() {
   ['search-input','qty-input','price-input','date-input'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('selected-ticker').value = '';
   setType('stock');
 }
 
-// Agregar posición
+function submitModal() {
+  if (modalMode === 'new') addPosition();
+  else addBuyToPosition();
+}
+
+// Agregar nueva posición
 function addPosition() {
   const ticker = document.getElementById('selected-ticker').value.trim().toUpperCase();
   const type = document.getElementById('selected-type').value;
@@ -332,46 +389,87 @@ function addPosition() {
   if (!qty || qty <= 0) return alert('Ingresa una cantidad válida.');
   if (!buyPrice || buyPrice <= 0) return alert('Ingresa un precio de compra válido.');
   if (!buyDate) return alert('Selecciona la fecha de compra.');
+
   const list = type === 'stock' ? STOCKS : CRYPTOS;
   const asset = list.find(s => s.ticker === ticker);
-  positions.push({
-    id: Date.now(), ticker, type,
-    name: asset ? asset.name : ticker,
-    finnhubSymbol: asset && asset.finnhubSymbol ? asset.finnhubSymbol : null,
-    qty, buyPrice, buyDate
-  });
-  savePositions();
-  closeModal();
-  renderHoldings();
-  fetchAllPrices();
+
+  // Si ya existe la posición, agregar compra directamente
+  const existing = positions.find(p => p.ticker === ticker);
+  if (existing) {
+    existing.buys.push({ id: Date.now(), qty, buyPrice, buyDate });
+  } else {
+    positions.push({
+      ticker, type,
+      name: asset ? asset.name : ticker,
+      finnhubSymbol: asset?.finnhubSymbol || null,
+      buys: [{ id: Date.now(), qty, buyPrice, buyDate }]
+    });
+  }
+  savePositions(); closeModal(); renderHoldings(); fetchAllPrices();
 }
 
-function deletePosition(id) {
-  if (!confirm('¿Eliminar esta posición?')) return;
-  positions = positions.filter(p => p.id !== id);
-  savePositions();
-  renderHoldings();
-  updateSummary();
+// Agregar compra a posición existente
+function addBuyToPosition() {
+  const qty = parseFloat(document.getElementById('qty-input').value);
+  const buyPrice = parseFloat(document.getElementById('price-input').value);
+  const buyDate = document.getElementById('date-input').value;
+  if (!qty || qty <= 0) return alert('Ingresa una cantidad válida.');
+  if (!buyPrice || buyPrice <= 0) return alert('Ingresa un precio de compra válido.');
+  if (!buyDate) return alert('Selecciona la fecha de compra.');
+  const pos = positions.find(p => p.ticker === modalTargetTicker);
+  if (!pos) return;
+  pos.buys.push({ id: Date.now(), qty, buyPrice, buyDate });
+  expandedRows.add(modalTargetTicker);
+  savePositions(); closeModal(); renderHoldings(); fetchAllPrices();
 }
 
-function savePositions() { localStorage.setItem('portfolio_positions_v2', JSON.stringify(positions)); }
+// Eliminar compra individual
+function deleteBuy(ticker, buyId, e) {
+  e.stopPropagation();
+  const pos = positions.find(p => p.ticker === ticker);
+  if (!pos) return;
+  if (pos.buys.length === 1) {
+    if (!confirm('Esta es la única compra. ¿Eliminar toda la posición?')) return;
+    positions = positions.filter(p => p.ticker !== ticker);
+    expandedRows.delete(ticker);
+  } else {
+    if (!confirm('¿Eliminar esta compra?')) return;
+    pos.buys = pos.buys.filter(b => b.id !== buyId);
+  }
+  savePositions(); renderHoldings(); updateSummary();
+}
+
+// Eliminar posición completa
+function deletePosition(ticker, e) {
+  e.stopPropagation();
+  if (!confirm(`¿Eliminar toda la posición de ${ticker}?`)) return;
+  positions = positions.filter(p => p.ticker !== ticker);
+  expandedRows.delete(ticker);
+  savePositions(); renderHoldings(); updateSummary();
+}
+
+function savePositions() { localStorage.setItem('portfolio_v3', JSON.stringify(positions)); }
+
+// Toggle expandir fila
+function toggleRow(ticker) {
+  if (expandedRows.has(ticker)) expandedRows.delete(ticker);
+  else expandedRows.add(ticker);
+  renderHoldings();
+}
 
 // Precios
 async function fetchPrice(position) {
   if (FINNHUB_API_KEY === 'TU_API_KEY_AQUI') {
-    const key = position.ticker;
-    if (!demoBasePrices[key]) demoBasePrices[key] = position.buyPrice * (0.85 + Math.random() * 0.4);
-    demoBasePrices[key] *= 1 + (Math.random() - 0.5) * 0.002;
-    return demoBasePrices[key];
+    if (!demoBasePrices[position.ticker]) {
+      const avgPrice = calcAvgPrice(position);
+      demoBasePrices[position.ticker] = avgPrice * (0.85 + Math.random() * 0.4);
+    }
+    demoBasePrices[position.ticker] *= 1 + (Math.random() - 0.5) * 0.002;
+    return demoBasePrices[position.ticker];
   }
   try {
-    let url;
-    if (position.type === 'crypto' && position.finnhubSymbol) {
-      url = `https://finnhub.io/api/v1/quote?symbol=${position.finnhubSymbol}&token=${FINNHUB_API_KEY}`;
-    } else {
-      url = `https://finnhub.io/api/v1/quote?symbol=${position.ticker}&token=${FINNHUB_API_KEY}`;
-    }
-    const res = await fetch(url);
+    const symbol = position.type === 'crypto' && position.finnhubSymbol ? position.finnhubSymbol : position.ticker;
+    const res = await fetch(`https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${FINNHUB_API_KEY}`);
     const data = await res.json();
     return (data && data.c > 0) ? data.c : null;
   } catch { return null; }
@@ -379,21 +477,25 @@ async function fetchPrice(position) {
 
 async function fetchAllPrices() {
   document.getElementById('refresh-label').textContent = 'Actualizando...';
-  const seen = new Set();
   for (const p of positions) {
-    const key = p.type === 'crypto' ? (p.finnhubSymbol || p.ticker) : p.ticker;
-    if (seen.has(key)) continue;
-    seen.add(key);
     const price = await fetchPrice(p);
     if (price) currentPrices[p.ticker] = price;
   }
   const time = new Date().toLocaleTimeString('es-CL', {hour:'2-digit',minute:'2-digit'});
   document.getElementById('refresh-label').textContent = 'Actualizado ' + time;
-  renderHoldings();
-  updateSummary();
+  renderHoldings(); updateSummary();
 }
 
-// Render tabla
+// Helpers de cálculo
+function calcTotalQty(pos) { return pos.buys.reduce((s, b) => s + b.qty, 0); }
+function calcTotalInvested(pos) { return pos.buys.reduce((s, b) => s + b.qty * b.buyPrice, 0); }
+function calcAvgPrice(pos) { const qty = calcTotalQty(pos); return qty > 0 ? calcTotalInvested(pos) / qty : 0; }
+
+function formatPrice(price, type) {
+  if (type === 'crypto' && price < 1) return '$' + price.toFixed(6);
+  if (type === 'crypto' && price < 100) return '$' + price.toFixed(4);
+  return '$' + price.toFixed(2);
+}
 function getCryptoIconClass(ticker) {
   if (ticker === 'BTC') return 'crypto';
   if (ticker === 'ETH') return 'eth';
@@ -401,71 +503,127 @@ function getCryptoIconClass(ticker) {
   return 'crypto-alt';
 }
 
-function formatPrice(price, type) {
-  if (type === 'crypto' && price < 1) return '$' + price.toFixed(6);
-  if (type === 'crypto' && price < 100) return '$' + price.toFixed(4);
-  return '$' + price.toFixed(2);
-}
-
+// Render
 function renderHoldings() {
   const container = document.getElementById('holdings-container');
   if (!positions.length) {
     container.innerHTML = `<div class="empty-state"><div class="empty-icon">📈</div><div class="empty-title">No hay posiciones aún</div><div class="empty-sub">Agrega acciones o criptomonedas para comenzar</div></div>`;
     return;
   }
-  const rows = positions.map(p => {
-    const invested = p.qty * p.buyPrice;
-    const cp = currentPrices[p.ticker];
+
+  const rows = positions.map(pos => {
+    const totalQty = calcTotalQty(pos);
+    const totalInvested = calcTotalInvested(pos);
+    const avgPrice = calcAvgPrice(pos);
+    const cp = currentPrices[pos.ticker];
+    const isExpanded = expandedRows.has(pos.ticker);
+    const iconClass = pos.type === 'crypto' ? getCryptoIconClass(pos.ticker) : '';
+    const badge = `<span class="asset-badge ${pos.type}">${pos.type === 'crypto' ? '₿ cripto' : '📈 stock'}</span>`;
+    const buysCount = pos.buys.length;
+
     let priceCell, pnlCell;
     if (cp) {
-      const pnl = p.qty * cp - invested;
-      const pnlPct = ((cp - p.buyPrice) / p.buyPrice) * 100;
+      const pnl = totalQty * cp - totalInvested;
+      const pnlPct = ((cp - avgPrice) / avgPrice) * 100;
       const cls = pnl >= 0 ? 'up' : 'down';
       const arrow = pnl >= 0 ? '▲' : '▼';
-      priceCell = `<span class="${pnl >= 0 ? 'pnl-positive' : 'pnl-negative'}">${formatPrice(cp, p.type)}</span>`;
+      priceCell = `<span class="${pnl >= 0 ? 'pnl-positive' : 'pnl-negative'}">${formatPrice(cp, pos.type)}</span>`;
       pnlCell = `<div class="${pnl >= 0 ? 'pnl-positive' : 'pnl-negative'}" style="font-size:0.9rem">${pnl >= 0 ? '+' : ''}$${Math.abs(pnl).toFixed(2)}</div><div><span class="pnl-pill ${cls}">${arrow} ${Math.abs(pnlPct).toFixed(2)}%</span></div>`;
     } else {
       priceCell = `<span class="price-loading dot-pulse">cargando</span>`;
       pnlCell = `<span class="price-loading">—</span>`;
     }
-    const dateStr = new Date(p.buyDate + 'T12:00:00').toLocaleDateString('es-CL', {day:'2-digit',month:'short',year:'numeric'});
-    const iconClass = p.type === 'crypto' ? getCryptoIconClass(p.ticker) : '';
-    const badge = `<span class="asset-badge ${p.type}">${p.type === 'crypto' ? '₿ cripto' : '📈 stock'}</span>`;
-    const qtyDisplay = p.type === 'crypto' ? (p.qty < 1 ? p.qty.toFixed(8) : p.qty) : p.qty;
-    return `<tr>
-      <td><div class="ticker-cell">
-        <div class="ticker-icon ${iconClass}">${p.ticker.slice(0,2)}</div>
-        <div>
-          <div class="ticker-name">${p.ticker}${badge}</div>
-          <div class="ticker-full">${p.name}</div>
+
+    // Detalle de compras individuales
+    const buyRows = pos.buys
+      .slice()
+      .sort((a, b) => new Date(a.buyDate) - new Date(b.buyDate))
+      .map(b => {
+        const dateStr = new Date(b.buyDate + 'T12:00:00').toLocaleDateString('es-CL', {day:'2-digit',month:'short',year:'numeric'});
+        const subInvested = b.qty * b.buyPrice;
+        let subPnl = '', subPct = '';
+        if (cp) {
+          const p = b.qty * cp - subInvested;
+          const pct = ((cp - b.buyPrice) / b.buyPrice) * 100;
+          subPnl = `<span class="${p >= 0 ? 'pnl-positive' : 'pnl-negative'}">${p >= 0 ? '+' : ''}$${Math.abs(p).toFixed(2)}</span>`;
+          subPct = `<span class="${p >= 0 ? 'pnl-positive' : 'pnl-negative'}">${pct >= 0 ? '+' : ''}${pct.toFixed(2)}%</span>`;
+        }
+        return `<tr>
+          <td style="color:var(--muted)">${dateStr}</td>
+          <td class="right td-mono">${formatPrice(b.buyPrice, pos.type)}</td>
+          <td class="right td-mono">${pos.type === 'crypto' && b.qty < 1 ? b.qty.toFixed(8) : b.qty}</td>
+          <td class="right td-mono">$${subInvested.toFixed(2)}</td>
+          <td class="right">${subPnl}</td>
+          <td class="right">${subPct}</td>
+          <td class="right"><button class="btn-del-buy" onclick="deleteBuy('${pos.ticker}',${b.id},event)" title="Eliminar compra">✕</button></td>
+        </tr>`;
+      }).join('');
+
+    return `
+    <tr class="row-main ${isExpanded ? 'expanded' : ''}" onclick="toggleRow('${pos.ticker}')">
+      <td>
+        <div class="ticker-cell">
+          <div class="ticker-icon ${iconClass}">${pos.ticker.slice(0,2)}</div>
+          <div>
+            <div class="ticker-name">${pos.ticker}${badge} <span class="buys-count">${buysCount > 1 ? buysCount + ' compras' : '1 compra'}</span></div>
+            <div class="ticker-full">${pos.name}</div>
+          </div>
         </div>
-      </div></td>
-      <td class="td-right td-mono"><div>${formatPrice(p.buyPrice, p.type)}</div><div style="font-size:0.7rem;color:var(--muted)">${dateStr}</div></td>
-      <td class="td-right td-mono">${qtyDisplay}</td>
-      <td class="td-right td-mono">$${invested.toFixed(2)}</td>
+      </td>
+      <td class="td-right td-mono">
+        <div>${formatPrice(avgPrice, pos.type)}</div>
+        <div style="font-size:0.7rem;color:var(--muted)">precio prom.</div>
+      </td>
+      <td class="td-right td-mono">${pos.type === 'crypto' && totalQty < 1 ? totalQty.toFixed(8) : totalQty}</td>
+      <td class="td-right td-mono">$${totalInvested.toFixed(2)}</td>
       <td class="td-right td-mono">${priceCell}</td>
       <td class="td-right">${pnlCell}</td>
-      <td class="td-right"><button class="btn-delete" onclick="deletePosition(${p.id})">✕</button></td>
+      <td class="td-right" style="white-space:nowrap">
+        <button class="btn-add-buy" onclick="openAddBuyModal('${pos.ticker}',event)" style="margin-right:0.4rem">+ compra</button>
+        <button class="btn-delete" onclick="deletePosition('${pos.ticker}',event)">✕</button>
+        <span class="chevron" style="margin-left:0.5rem">▶</span>
+      </td>
+    </tr>
+    <tr class="row-detail">
+      <td colspan="7">
+        <div class="detail-inner ${isExpanded ? 'open' : ''}">
+          <div class="detail-content">
+            <div class="detail-header">
+              <span class="detail-title">Historial de compras · ${pos.ticker}</span>
+              <button class="btn-add-buy" onclick="openAddBuyModal('${pos.ticker}',event)">+ Nueva compra</button>
+            </div>
+            <table class="buys-table">
+              <thead><tr>
+                <th>Fecha</th><th class="right">Precio</th><th class="right">Cantidad</th>
+                <th class="right">Invertido</th><th class="right">P&L $</th><th class="right">P&L %</th><th></th>
+              </tr></thead>
+              <tbody>${buyRows}</tbody>
+            </table>
+          </div>
+        </div>
+      </td>
     </tr>`;
   }).join('');
+
   container.innerHTML = `<div class="holdings-wrap"><table class="holdings-table">
     <thead><tr>
-      <th>Activo</th><th class="right">Precio Compra</th><th class="right">Cantidad</th>
+      <th>Activo</th><th class="right">Precio Prom.</th><th class="right">Total</th>
       <th class="right">Invertido</th><th class="right">Precio Actual</th><th class="right">P&L</th><th></th>
     </tr></thead>
     <tbody>${rows}</tbody>
   </table></div>`;
 }
 
-// Resumen
 function updateSummary() {
   let totalInvested = 0, totalCurrent = 0, bestTicker = '—', bestPct = -Infinity;
-  positions.forEach(p => {
-    const invested = p.qty * p.buyPrice;
-    totalInvested += invested;
-    const cp = currentPrices[p.ticker];
-    totalCurrent += cp ? p.qty * cp : invested;
-    if (cp) { const pct = ((cp - p.buyPrice) / p.buyPrice) * 100; if (pct > bestPct) { bestPct = pct; bestTicker = p.ticker; } }
+  positions.forEach(pos => {
+    const inv = calcTotalInvested(pos);
+    const qty = calcTotalQty(pos);
+    const avg = calcAvgPrice(pos);
+    totalInvested += inv;
+    const cp = currentPrices[pos.ticker];
+    totalCurrent += cp ? qty * cp : inv;
+    if (cp) { const pct = ((cp - avg) / avg) * 100; if (pct > bestPct) { bestPct = pct; bestTicker = pos.ticker; } }
   });
   const totalPnl = totalCurrent - totalInvested;
   const totalPnlPct = totalInvested > 0 ? (totalPnl / totalInvested) * 100 : 0;
@@ -481,8 +639,7 @@ function updateSummary() {
   document.getElementById('last-update').textContent = 'Actualizado ' + new Date().toLocaleTimeString('es-CL', {hour:'2-digit',minute:'2-digit'});
 }
 
-renderHoldings();
-updateSummary();
+renderHoldings(); updateSummary();
 if (positions.length) fetchAllPrices();
 setInterval(() => { if (positions.length) fetchAllPrices(); }, 60000);
 </script>
